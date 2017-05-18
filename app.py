@@ -39,7 +39,7 @@ def makeWebhookResult(req):
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
     number = parameters.get("number")
-    speech = "There are "+num2str(len(number))+" numbers."
+    speech = "There is "+str(len(number))+" numbers."
     print("Response:")
     print(speech)
 
