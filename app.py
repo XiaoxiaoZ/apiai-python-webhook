@@ -31,7 +31,7 @@ def webhook():
 def processRequest(req):
     if req.get("result").get("action") != "jackWebhook":
         return {}
-    res = makeWebhookResult(data)
+    res = makeWebhookResult()
     return res
 
 
