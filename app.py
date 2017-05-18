@@ -34,12 +34,18 @@ def processRequest(req):
     res = makeWebhookResult(req)
     return res
 
+def listsum(numList):
+    theSum = 0
+    for i in numList:
+        theSum = theSum + i
+    return theSum
+
 def makeWebhookResult(req):
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
     number = parameters.get("number")
-    speech = "There is "+str(len(number))+" numbers."
+    speech = "Total value is "+str(listsum(number))
     print("Response:")
     print(speech)
 
