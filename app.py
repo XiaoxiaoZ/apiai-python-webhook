@@ -34,7 +34,7 @@ def processRequest(req):
     res = makeWebhookResult(req)
     return res
 
-def makeWebhookResult():
+def makeWebhookResult(req):
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
