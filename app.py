@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 
-import urllib
+from __future__ import print_function
+from future.standard_library import install_aliases
+install_aliases()
+
+from urllib.parse import urlparse, urlencode
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
+
 import json
 import os
 
@@ -29,16 +36,14 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "jackWebhooks":
+    if req.get("result").get("action") != "yahooWeatherForecast":
         return {}
+    baseurl = "https://query.yahooapis.com/v1/public/yql?"
     yql_query = makeYqlQuery(req)
     if yql_query is None:
         return {}
-    
-    result = urllib.urlopen(yql_url).read()
-    print("yql result: ")
-    print(result)
-
+    yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+    result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResult(data)
     return res
@@ -55,77 +60,40 @@ def makeYqlQuery(req):
 
 
 def makeWebhookResult(data):
+    query = data.get('query')
+    if query is None:
+        return {}
+
+    result = query.get('results')
+    if result is None:
+        return {}
+
+    channel = result.get('channel')
+    if channel is None:
+        return {}
+
+    item = channel.get('item')
+    location = channel.get('location')
+    units = channel.get('units')
+    if (location is None) or (item is None) or (units is None):
+        return {}
+
+    condition = item.get('condition')
+    if condition is None:
+        return {}
 
     # print(json.dumps(item, indent=4))
 
-    speech = "testtesttest"
+    speech = "Today in " + location.get('city') + ": " + condition.get('text') + \
+             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
 
     print("Response:")
     print(speech)
 
-    slack_message = {
-        "text": speech,
-        "attachments": [
-            {
-                "title": channel.get('title'),
-                "title_link": channel.get('link'),
-                "color": "#36a64f",
-
-                "fields": [
-                    {
-                        "title": "Condition",
-                        "value": "Temp " + condition.get('temp') +
-                                 " " + units.get('temperature'),
-                        "short": "false"
-                    },
-                    {
-                        "title": "Wind",
-                        "value": "Speed: " + channel.get('wind').get('speed') +
-                                 ", direction: " + channel.get('wind').get('direction'),
-                        "short": "true"
-                    },
-                    {
-                        "title": "Atmosphere",
-                        "value": "Humidity " + channel.get('atmosphere').get('humidity') +
-                                 " pressure " + channel.get('atmosphere').get('pressure'),
-                        "short": "true"
-                    }
-                ],
-
-                "thumb_url": "http://l.yimg.com/a/i/us/we/52/" + condition.get('code') + ".gif"
-            }
-        ]
-    }
-
-    facebook_message = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type": "generic",
-                "elements": [
-                    {
-                        "title": channel.get('title'),
-                        "image_url": "http://l.yimg.com/a/i/us/we/52/" + condition.get('code') + ".gif",
-                        "subtitle": speech,
-                        "buttons": [
-                            {
-                                "type": "web_url",
-                                "url": channel.get('link'),
-                                "title": "View Details"
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-    }
-
-    print(json.dumps(slack_message))
-
     return {
         "speech": speech,
         "displayText": speech,
-        "data": {"slack": slack_message, "facebook": facebook_message},
+        # "data": data,
         # "contextOut": [],
         "source": "apiai-weather-webhook-sample"
     }
@@ -134,6 +102,6 @@ def makeWebhookResult(data):
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
-    print "Starting app on port %d" % port
+    print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
