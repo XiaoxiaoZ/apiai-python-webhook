@@ -1,22 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @XiaoxiaoZ
- Sign out
- Unwatch 1
-  Star 0
-  Fork 280 XiaoxiaoZ/apiai-python-webhook
-forked from xVir/apiai-python-webhook
- Code  Pull requests 0  Projects 0  Wiki  Pulse  Graphs  Settings
-Branch: master Find file Copy pathapiai-python-webhook/app.py
-c1b7a65  4 minutes ago
-@XiaoxiaoZ XiaoxiaoZ Update app.py
-3 contributors @xVir @XiaoxiaoZ @artemgoncharuk
-RawBlameHistory    
-Executable File  108 lines (78 sloc)  2.56 KB
 #!/usr/bin/env python
 
 from __future__ import print_function
