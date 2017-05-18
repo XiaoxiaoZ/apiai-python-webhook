@@ -45,7 +45,9 @@ def makeWebhookResult(req):
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
     number = parameters.get("number")
-    speech = "Total value is "+str(listsum(number))
+    mathop = parameters.get("math-operation")
+    if mathop = "foo"
+        speech = "Total value is "+str(listsum(number))
     print("Response:")
     print(speech)
 
