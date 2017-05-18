@@ -29,8 +29,8 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "jackWebhooks":
-        return {}
+    #if req.get("result").get("action") != "jackWebhooks":
+     #   return {}
     yql_query = makeYqlQuery(req)
     if yql_query is None:
         return {}
