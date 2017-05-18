@@ -31,22 +31,14 @@ def webhook():
 def processRequest(req):
     if req.get("result").get("action") != "jackWebhook":
         return {}
-    res = makeWebhookResult()
+    res = makeWebhookResult(req)
     return res
 
-
-def makeYqlQuery(req):
+def makeWebhookResult():
     result = req.get("result")
     parameters = result.get("parameters")
     city = parameters.get("geo-city")
-    if city is None:
-        return None
-
-    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
-
-
-def makeWebhookResult():
-    speech = "testestestest"
+    speech = "testestestest"+city
     print("Response:")
     print(speech)
 
