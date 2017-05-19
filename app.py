@@ -29,7 +29,7 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "jackWebhook":
+    if req.get("result").get("action") != "jackMath":
         return {}
     res = makeWebhookResult(req)
     return res
@@ -46,8 +46,11 @@ def makeWebhookResult(req):
     city = parameters.get("geo-city")
     number = parameters.get("number")
     mathop = parameters.get("math-operation")
-    if mathop == "foo":
+    if mathop == "summation":
         speech = "Total value is "+str(listsum(number))
+    if mathop == "subtraction":
+        if len(number)>2:
+            speech = str(number(0))+" minus "+str(number(1))+" equal to "+str(number(0)-number(1))
     print("Response:")
     print(speech)
 
