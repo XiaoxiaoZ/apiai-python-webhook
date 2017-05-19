@@ -29,7 +29,6 @@ def webhook():
 
 
 def processRequest(req):
-    req = {}
     if req.get("result").get("action") == "jackMath":
         res = mathResult(req)
     if req.get("result").get("action") == "jackExample":
