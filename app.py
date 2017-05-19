@@ -49,8 +49,10 @@ def makeWebhookResult(req):
     if mathop == "summation":
         speech = "Total value is "+str(listsum(number))
     if mathop == "subtraction":
-        if len(number)>2:
+        if len(number)==2:
             speech = str(number(0))+" minus "+str(number(1))+" equal to "+str(number(0)-number(1))
+        else:
+            speech = "Please give two numbers only"
     print("Response:")
     print(speech)
 
